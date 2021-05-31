@@ -26,6 +26,7 @@ void load_data_from_file(BitStream *self, void *data) {
     size_t read = fread(self->data + self->size, sizeof(uint8_t), 
                         DEFAULT_READ_SIZE, self->fp);
 
+    // printf("Read %lu\n", read);
     self->total_read += read;
     self->size += read;
 
@@ -88,6 +89,9 @@ Demuxer::Demuxer(const char *file) {
     video_stream->load_callback = load_packet_from_parent;
     video_stream->load_callback_data = this;
     video_stream->type = MPEG1_PACKET_TYPE_VIDEO;
+
+    video_decoder = new VideoDecoder(video_stream);
+    video_decoder->decode();
 
 }
 

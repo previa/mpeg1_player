@@ -1,6 +1,8 @@
 CMakeFiles/
-serenity.mpg
+*.mpg
 Makefile
 mpeg1_player
 CMakeCache.txt
 cmake_install.cmake
+images/*
+out.txt

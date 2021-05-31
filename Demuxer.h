@@ -1,4 +1,4 @@
-#include "BitStream.h"
+#include "VideoDecoder.h"
 
 typedef struct {
     int type {0};
@@ -27,4 +27,6 @@ private:
     double decode_time(BitStream*);
 
     double last_decoded_pts {0};
+
+    VideoDecoder *video_decoder {nullptr};
 };

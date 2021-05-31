@@ -30,8 +30,8 @@ void BitStream::next_start_code() {
     while(has_remaining(5 << 3)) {
         size_t byte_index = (bit_index) >> 3;
         if(data[byte_index] == 0x00 &&
-            data[byte_index] == 0x00 && 
-            data[byte_index] == 0x01) {
+            data[byte_index + 1] == 0x00 && 
+            data[byte_index + 2] == 0x01) {
                 bit_index = (byte_index + 4) << 3;
                 start_code = data[byte_index + 3];
                 return;
@@ -49,8 +49,8 @@ bool BitStream::no_start_code() {
 
     size_t byte_index = ((bit_index + 7) >> 3);
     return !(data[byte_index] == 0x00 &&
-                data[byte_index] == 0x00 &&
-                data[byte_index] == 0x01); 
+                data[byte_index + 1] == 0x00 &&
+                data[byte_index + 2] == 0x01); 
 }
 
 void BitStream::skip(size_t nr_to_skip) {
