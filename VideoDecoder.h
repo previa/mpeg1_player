@@ -1,4 +1,9 @@
 #include "VLC.h"
+#include <queue>
+#include <opencv2/opencv.hpp>
+
+using namespace std;
+using namespace cv;
 
 static const double ASPECT_RATIO[] = {
     0,
@@ -129,6 +134,17 @@ static const VLC CODE_BLOCK_PATTERN[] = {
     {       0,   47}, {       0,   31},  //  62: 0000 0011x
 };
 
+static const double COS_DATA[8][8] = {
+    1.000000,0.980785,0.923880,0.831470,0.707107,0.555570,0.382683,0.195090,
+    1.000000,0.831470,0.382683,-0.195090,-0.707107,-0.980785,-0.923880,-0.555570,
+    1.000000,0.555570,-0.382683,-0.980785,-0.707107,0.195090,0.923880,0.831470,
+    1.000000,0.195090,-0.923880,-0.555570,0.707107,0.831470,-0.382683,-0.980785,
+    1.000000,-0.195090,-0.923880,0.555570,0.707107,-0.831470,-0.382684,0.980785,
+    1.000000,-0.555570,-0.382683,0.980785,-0.707107,-0.195090,0.923880,-0.831470,
+    1.000000,-0.831470,0.382683,0.195090,-0.707107,0.980785,-0.923879,0.555570,
+    1.000000,-0.980785,0.923880,-0.831470,0.707107,-0.555570,0.382683,-0.195090
+};
+
 typedef struct {
     uint8_t *y;
     uint8_t *cb;
@@ -137,7 +153,7 @@ typedef struct {
 
 class VideoDecoder {
 public:
-    VideoDecoder(BitStream*);
+    VideoDecoder(BitStream*, queue<Mat *>*);
 
     void decode();
 
@@ -166,6 +182,8 @@ private:
     void init_frames();
     void set_prev_frame();
     void frame_to_rgb(uint8_t*);
+    void frame_to_rgb(Mat *result); 
+    void add_frame_to_buffer();
 
     void write_image();
 
@@ -245,4 +263,6 @@ private:
     int dct_dc_differential {0};
 
     size_t current_picture_nr {0};
+
+    queue<Mat *> *display_buffer {nullptr};
 };

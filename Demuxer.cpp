@@ -90,9 +90,6 @@ Demuxer::Demuxer(const char *file) {
     video_stream->load_callback_data = this;
     video_stream->type = MPEG1_PACKET_TYPE_VIDEO;
 
-    video_decoder = new VideoDecoder(video_stream);
-    video_decoder->decode();
-
 }
 
 Demuxer::~Demuxer() {
